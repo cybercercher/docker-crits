@@ -2,13 +2,15 @@ FROM ubuntu:trusty
 MAINTAINER Mike Ryan <falter@gmail.com>
 
 RUN \
-  export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
-  apt-get install -y eatmydata && \
-  eatmydata apt-get install -y \
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -y eatmydata && \
+    eatmydata apt-get install -y --fix-missing curl git
       build-essential \
-      curl \
+      curl \ 
+      git \
       libevent-dev \
+      libz-dev \
       libfuzzy-dev \
       libldap2-dev \
       libpcap-dev \
@@ -16,48 +18,59 @@ RUN \
       libsasl2-dev \
       libxml2-dev \
       libxslt1-dev \
-      m2crypto \
+      libyaml-dev \
+      mongodb-org \
       numactl \
       p7zip-full \
       python-dev \
-      python-lxml \
-      python-m2crypto \
-      python-matplotlib \
-      python-numpy \
-      python-pycurl \
-      python-pydot \
-      python-pyparsing \
-      python-setuptools \
-      python-yaml \
+      python-pip \
       ssdeep \
       unrar-free \
       upx \
-      zip \ 
-      yara \
-      tshark \
-      tcpdump \
-      zlib1g-dev && \ 
-  apt-get clean && rm -rf /var/lib/apt/lists/*
+      zip \
+      swig \
+      libssl-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN eatmydata easy_install --script-dir=/usr/bin -U pip
 
 RUN eatmydata /usr/bin/pip install \
       anyjson==0.3.3 \
+      amqp \
+      anyjson \
+      billiard \
+      biplist \
       bitstring==3.1.3 \
       cybox==2.1.0.5 \
+      celery \
       python-dateutil==2.2 \
       defusedxml==0.4.1 \
       django==1.6.5 \
+      django-celery \
       django-tastypie==0.11.0 \
       django-tastypie-mongoengine==0.4.5 \
       importlib==1.0.3 \
+      kombu \
+      lxml \
       libtaxii==1.1.102 \
+      m2crypto \
+      --allow-external mongoengine
       mongoengine==0.8.7 \
+      olefile \
       pillow==2.4.0 \
       pydeep==0.2 \
+      pymongo==2.7.2 \
+      pyparsing \
+      python-dateutil \
       python-ldap==2.4.15 \
       python-magic==0.4.6 \
+      python-mimeparse \
+      pytz \
+      pyyaml \
+      requests \
+      setuptools \
       simplejson==3.5.2 \
+      six \
       stix==1.1.1.0 \
       requests==1.1.0 \
       celery==3.0.12 \
@@ -65,7 +78,8 @@ RUN eatmydata /usr/bin/pip install \
       pymongo==2.7.2 \
       yara==1.7.7 \
       uwsgi==2.0.10 \
-      dnslib==0.9.4
+      dnslib==0.9.4 \
+      wsgiref 
 
 RUN eatmydata /usr/bin/pip install --allow-external pefile --allow-unverified pefile pefile
 RUN eatmydata /usr/bin/pip install https://github.com/MITRECND/pynids/archive/0.6.2.zip
