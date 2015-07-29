@@ -4,7 +4,7 @@ import socket, sys, time
 interval = 1
 attempts = 60
 GRIDFS=1
-execfile('/data/crits/crits/config/database.py')
+execfile('/config/database.py')
 
 for x in xrange(1,attempts):
   print "Trying to reach %s:%d" % (MONGO_HOST, MONGO_PORT)
