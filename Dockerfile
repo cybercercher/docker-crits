@@ -4,8 +4,7 @@ MAINTAINER Mike Ryan <falter@gmail.com>
 RUN \
     export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y eatmydata && \
-    eatmydata apt-get install -y --fix-missing curl git
+    eatmydata apt-get install -y --fix-missing curl git \
       build-essential \
       curl \ 
       git \
@@ -19,7 +18,15 @@ RUN \
       libxml2-dev \
       libxslt1-dev \
       libyaml-dev \
-      mongodb-org \
+      m2crypto \
+      python-m2crypto \
+      python-matplotlib \
+      python-numpy \
+      python-pycurl \
+      python-pydot \
+      python-pyparsing \
+      python-setuptools \
+      python-yaml \
       numactl \
       p7zip-full \
       python-dev \
@@ -29,7 +36,11 @@ RUN \
       upx \
       zip \
       swig \
-      libssl-dev && \
+      yara \
+      tshark \
+      tcpdump \
+      libssl-dev \
+      zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN eatmydata easy_install --script-dir=/usr/bin -U pip
@@ -88,22 +99,22 @@ RUN eatmydata /usr/bin/pip install https://github.com/MITRECND/htpy/archive/RELE
 ENV HOME /root
 RUN useradd -m crits
 
-RUN curl -o /tmp/chopshop.tgz https://codeload.github.com/MITRECND/chopshop/tar.gz/RELEASE_4.2 && \
+## Clone chopshop /data/chopshop
+RUN \
     mkdir -p /data/chopshop && \
-    tar xzf /tmp/chopshop.tgz -C /data/chopshop --strip-components 1 && \
-    rm /tmp/chopshop.tgz && \
+    git clone -b RELEASE_4.2 https://github.com/MITRECND/chopshop.git /data/chopshop && \
     chown -R crits:crits /data/chopshop
 
-RUN curl -o /tmp/crits.tgz https://codeload.github.com/crits/crits/tar.gz/v3.1.0 && \
+## Clone CRITs
+RUN \
     mkdir -p /data/crits && \
-    tar xzf /tmp/crits.tgz -C /data/crits --strip-components 1 && \
-    rm /tmp/crits.tgz && \
+    git clone -b master https://github.com/crits/crits.git /data/crits && \
     chown -R crits:crits /data/crits
 
-RUN curl -o /tmp/crits_services.tgz https://codeload.github.com/crits/crits_services/tar.gz/v3.1.0 && \
+## Clone CRITs Services
+RUN \
     mkdir -p /data/services-available && \
-    tar xzf /tmp/crits_services.tgz -C /data/services-available --strip-components 1 && \
-    rm /tmp/crits_services.tgz && \
+    git clone -b master https://github.com/crits/crits_services.git /data/services-available && \
     chown -R crits:crits /data/services-available
 
 ADD docker /docker
@@ -112,6 +123,7 @@ RUN mkdir /config
 RUN cp /data/crits/crits/config/database_example.py /config
 RUN cp /data/crits/crits/config/overrides_example.py /config
 VOLUME [ "/config" ]
+VOLUME [ "/data" ]
 
 # HTTP socket
 EXPOSE 8080
