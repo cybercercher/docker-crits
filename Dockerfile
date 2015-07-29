@@ -1,6 +1,10 @@
 FROM ubuntu:trusty
 MAINTAINER Mike Ryan <falter@gmail.com>
 
+ENV chopshop_brch=RELEASE_4.2
+ENV crits_brch=master
+ENV crits_services_brch=master
+
 RUN \
     export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
@@ -100,21 +104,22 @@ ENV HOME /root
 RUN useradd -m crits
 
 ## Clone chopshop /data/chopshop
+
 RUN \
     mkdir -p /data/chopshop && \
-    git clone -b RELEASE_4.2 https://github.com/MITRECND/chopshop.git /data/chopshop && \
+    git clone -b $chopshop_brch https://github.com/MITRECND/chopshop.git /data/chopshop && \
     chown -R crits:crits /data/chopshop
 
 ## Clone CRITs
 RUN \
     mkdir -p /data/crits && \
-    git clone -b master https://github.com/crits/crits.git /data/crits && \
+    git clone -b $crits_brch https://github.com/crits/crits.git /data/crits && \
     chown -R crits:crits /data/crits
 
 ## Clone CRITs Services
 RUN \
     mkdir -p /data/services-available && \
-    git clone -b master https://github.com/crits/crits_services.git /data/services-available && \
+    git clone -b $crits_service_brch https://github.com/crits/crits_services.git /data/services-available && \
     chown -R crits:crits /data/services-available
 
 ADD docker /docker
